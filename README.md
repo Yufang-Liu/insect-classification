@@ -27,7 +27,7 @@ After running the preprocessing, the following files are generated in `demo` fol
 ## Step 2: Train the model
 
 ```bash
-python train.py -data ../demo/demo -save_model ../demo/deom-model
+python train.py -data ../demo/demo -save_model ../demo/demo-model
 ```
 
 The main train command is quite simple. Minimally it takes a data file and a save file.

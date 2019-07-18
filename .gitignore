@@ -2,5 +2,6 @@
 .DS_Store
 *.sh
 *.pt
+*.vocab.pkl
 __pycache__
 *.pyc
