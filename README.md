@@ -11,39 +11,46 @@
 + ffmpeg
 + lame
 
-# Train and Evaluation
-## Step 1: Preprocess the data
+# Data Format
+We will be working with some example data in `demo/` folder.
+The directory structure is as follows:
+<pre>
+demo
+└── all_data
+    ├── 20190722
+    │   ├── label.txt
+    │   └── sound
+    │       ├── 13_黄脸油葫芦.mp3
+    │       ├── 测试01_迷卡斗蟋.m4a
+    │       ├── 测试02_迷卡斗蟋.m4a
+    │       ├── 测试03_迷卡斗蟋.m4a
+    │       ├── 测试04_黄脸油葫芦.m4a
+    │       ├── 测试05_黄脸油葫芦.m4a
+    │       ├── 测试06_黄脸油葫芦.m4a
+    │       └── 测试07_黄脸油葫芦.m4a
+    └── 20190724
+        ├── label.txt
+        └── sound
+</pre>
++ `all_data` folder  contains a lot of batch data.
+Each batch of data corresponds to a folder.
+This folder is recommended to be named by date, such as `20190722`.
+If you want to add a batch of data, you should submit a folder like this. 
++ For each folder like `20190722`, it contains
+    + `sound` folder  contains all audio files. Each audio file should be mp3, m4a, wav format and the name of file must end in format.
+    + `label.txt` file annoates the label of audo files.
+        + Each row is an anotation which includes two columns separated by a `\t`.
+        + The first column is the name of audio file in `sound` folder.
+        + The second column is the label of audio file.
+
+
+# Train 
+If you have prepared the data like `demo`, to train a model, you could run following order
 ```bash
-cd run
-python preprocess.py -data_dir ../demo/data -train_path ../demo/train.txt -valid_path ../demo/valid.txt -save_data ../demo/demo
+./train demo
 ```
 
-After running the preprocessing, the following files are generated in `demo` folder.
-
-+ `demo.train.pt`: serialized pytorch file containing training data
-+ `demo.valid.pt`: serialized pytorch file containing validation data
-+ `demo.vocab.pkl`: serialized pickle file contraining vocabulary data
-
-## Step 2: Train the model
-
-```bash
-python train.py -data ../demo/demo -save_model ../demo/demo-model
-```
-
-The main train command is quite simple. Minimally it takes a data file and a save file.
-
-If you want to train on GPU, you need to set, as an example: CUDA_VISIBLE_DEVICES=1,3 `-gpu_ranks 0 1` to use
-(say) GPU 1 and 3 on this node only.
-
-the `demo-model_best.pt` file is generated in `demo` folder, which is the serialized pytorch file containing
-model parameters, optimizer parameters, vocabulary, the score of validation set and the number of epoch.
-
-## Step 3: Evaluation
-```bash
-python evaluation.py -model ../demo/demo-model_best.pt -data_dir ../demo/data  -test_path ../demo/valid.txt
-```
-
-Now you have a model which you can use to predict on test data. 
+After runing the order, you could obtain the trained model named `demo-model_best.pt` in `demo` folder.
 
 # Deployment
 Now you have a model `demo-model_best.pt` in `demo` folder.
