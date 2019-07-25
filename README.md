@@ -12,7 +12,7 @@
 + lame
 
 # Data Organization
-An example workspace is in `demo` directory. It contains the training set (`all_data` directory)
+An example workspace is in `demo` directory. It contains the training set (`all_data`)
 and the learned model (after training). 
 
 <pre>
@@ -32,23 +32,25 @@ demo
     └── 20190724
         ├── label.txt
         └── sound
+            ├── ...
 </pre>
 
 For serving the incremental training, the `all_data` directory contains subdirectories (e.g., `20190722`, `20190724`),
 each subdirectory is a batch of data (e.g., collected every one or two days).
-- `sound` contains sould files
-- `label.txt` are annotations of the training data in column format 
-  + Each row is an anotation which has two columns separated by a `\t`.
-  + The first column is the name of audio file in `sound` folder.
-  + The second column is the label of audio file.
+- `sound` contains sould files (with format wav/mp3/m4a)
+- `label.txt` contains annotations in column format 
+  + Each row is annotation which has two columns separated by a `\t`.
+  + The first column is the name of an audio file in `sound` folder.
+  + The second column is the label of the audio file.
 
 
-# Train 
+# Training 
 To train a model, 
 ```bash
 ./train demo v1
 ```
-If it sucesses, you will see the following information and the training process is started.
+where arguments `demo` is the workspace above and `v1` is the prefix of the output model (e.g., versions)
+If it sucesses, we will see the following information and the training process is started.
 ```
 Building adam optimizer...
 Building training data iterator...
@@ -73,32 +75,35 @@ Evaluating validation set...
   * Epoch: 1 Step: 1 P@100: 1.000000 Instances per Sec: 144.663466
   * Epoch: 1 MAP  : 0.750000 Instances per Sec: 144.663466
 ```
-When it finishes, the trained model named `v1-model_best.pt` in `demo` folder.
+When it finishes, the trained model named `v1-model_best.pt` in `demo`.
 
 # Deployment
 
-## Starting the server
+## Starting the Server
+Given a model `demo/v1-model_best.pt`, we can use `deploy/run_server.py` to deploy a REST API.
 ```bash
 cd deploy
 python run_server.py -model ../demo/v1-model_best.pt -version v1
 ```
 
-It will start a server at http://host:port/predict/v1. 
+It will start serving at http://127.0.0.1:5000/predict/v1
 
-## Submitting requests 
+## Submitting Requests 
 
 ```bash
 python simple_request.py -audio_path 测试04_黄脸油葫芦.m4a -version v1
 ```
 
-You can see the following output at the bottom of screen.
+It will output
 ```bash
 1. 黄脸油葫芦: 0.6078
 2. 迷卡斗蟋: 0.3922
 ```
 
-Other usages of `run_server.py`  and `simple_request.py` can be found with `--help/-h`
+## Full Options 
+Full options of  `run_server.py`  
 ```
+% python3 run_server.py -h
 usage: run_server.py [-h] --model MODEL [--gpu GPU] [--host HOST]
                      [--port PORT] [--version VERSION]
 
@@ -121,7 +126,9 @@ SERVER:
                         The version of model
 ```
 
+Full options of `simple_request.py`
 ```
+% python3 simple_request.py -h
 usage: simple_request.py [-h] --audio_path AUDIO_PATH
                          [--rest_api_url REST_API_URL] [--top_num TOP_NUM]
                          [--version VERSION]
