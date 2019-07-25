@@ -37,7 +37,7 @@ demo
 
 For serving the incremental training, the `all_data` directory contains subdirectories (e.g., `20190722`, `20190724`),
 each subdirectory is a batch of data (e.g., collected every one or two days).
-- `sound` contains sould files (with format wav/mp3/m4a)
+- `sound` contains sound files (with format wav/mp3/m4a)
 - `label.txt` contains annotations in column format 
   + Each row is annotation which has two columns separated by a `\t`.
   + The first column is the name of an audio file in `sound` folder.
