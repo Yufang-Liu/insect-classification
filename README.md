@@ -1,4 +1,4 @@
-# Insect classification task
+# Insect Sound Classification 
 
 # Requirements
 
@@ -11,9 +11,10 @@
 + ffmpeg
 + lame
 
-# Data Format
-We will be working with some example data in `demo/` folder.
-The directory structure is as follows:
+# Data Organization
+An example workspace is in `demo` directory. It contains the training set (`all_data` directory)
+and the learned model (after training). 
+
 <pre>
 demo
 └── all_data
@@ -32,42 +33,50 @@ demo
         ├── label.txt
         └── sound
 </pre>
-+ `all_data` folder  contains a lot of batch data.
-Each batch of data corresponds to a folder.
-This folder is recommended to be named by date, such as `20190722`.
-If you want to add a batch of data, you should submit a folder like this. 
-+ For each folder like `20190722`, it contains
-    + `sound` folder  contains all audio files. Each audio file should be mp3, m4a, wav format and the name of file must end in format.
-    + `label.txt` file annoates the label of audo files.
-        + Each row is an anotation which includes two columns separated by a `\t`.
-        + The first column is the name of audio file in `sound` folder.
-        + The second column is the label of audio file.
+
+For serving the incremental training, the `all_data` directory contains subdirectories (e.g., `20190722`, `20190724`),
+each subdirectory is a batch of data (e.g., collected every one or two days).
+- `sound` contains sould files
+- `label.txt` are annotations of the training data in column format 
+  + Each row is an anotation which has two columns separated by a `\t`.
+  + The first column is the name of audio file in `sound` folder.
+  + The second column is the label of audio file.
 
 
 # Train 
-If you have prepared the data like `demo`, to train a model, you could run following order
+To train a model, 
 ```bash
-./train demo
+./train demo v1
 ```
-
-After runing the order, you could obtain the trained model named `demo-model_best.pt` in `demo` folder.
+If it sucesses, you will see the following information and the training process is started.
+```
+training log...
+```
+When it finishes, the trained model named `v1-model_best.pt` in `demo` folder.
 
 # Deployment
-Now you have a model `demo-model_best.pt` in `demo` folder.
 
-## Starting the pytorch server
+## Starting the server
 ```bash
 cd deploy
-python run_server.py -model ../demo/demo-model_best.pt
+python run_server.py -model ../demo/v1-model_best.pt -version v1
 ```
 
-## Submitting requests to pytorch server
+It will start a server at http://host:port/predict/v1. 
+
+## Submitting requests 
+
 ```bash
-python simple_request.py -audio_path 测试04_黄脸油葫芦.m4a
+python simple_request.py -audio_path 测试04_黄脸油葫芦.m4a -version v1
 ```
 
 You can see the following output at the bottom of screen.
 ```bash
 1. 黄脸油葫芦: 0.6078
 2. 迷卡斗蟋: 0.3922
+```
+
+Other usages of `run_server.py`  and `simple_request.py` can be found with `--help`
+```
+usage info of run_server and simple_request
 ```
