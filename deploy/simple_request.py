@@ -26,8 +26,8 @@ def predict_result(opt):
 
     payload = {'mat': mat, 'top_num': opt.top_num}
     # Submit the request.
-    r = requests.post(opt.rest_api_url, files=payload).json()
-    #  print(r.text)
+    full_url = opt.rest_api_url + "/" + opt.version
+    r = requests.post(full_url, files=payload).json()
 
     # Ensure the request was successful.
     print()
@@ -40,6 +40,8 @@ def predict_result(opt):
     # Otherwise, the request failed.
     else:
         print('Request failed')
+        if 'help' in r:
+            print(r['help'])
 
 def _get_parser():
     parser = configargparse.ArgumentParser(description="simple_request.py")
@@ -54,6 +56,8 @@ def _get_parser():
     group.add('--top_num', '-top_num', type=int,
               default=2,
               help="Return top predictions")
+    group.add('--version', '-version', type=str, default="v0",
+                help="The version of model")
     return parser
 
 if __name__ == '__main__':

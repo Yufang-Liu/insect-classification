@@ -50,7 +50,28 @@ To train a model,
 ```
 If it sucesses, you will see the following information and the training process is started.
 ```
-training log...
+Building adam optimizer...
+Building training data iterator...
+train data size: 98
+Building validation data iterator...
+valid data size: 38
+Starting training on CPU, could be very slow
+Epoch: 0 Step: 1 Loss: 10.077764 Instances per Sec: 1.220545
+Evaluating validation set...
+  * Epoch: 0 Step: 1 P@1  : 0.500000 Instances per Sec: 143.867318
+  * Epoch: 0 Step: 1 P@10 : 1.000000 Instances per Sec: 143.867318
+  * Epoch: 0 Step: 1 P@50 : 1.000000 Instances per Sec: 143.867318
+  * Epoch: 0 Step: 1 P@100: 1.000000 Instances per Sec: 143.867318
+  * Epoch: 0 MAP  : 0.750000 Instances per Sec: 143.867318
+  * Achieving best score on validation set...
+Saving checkpoint ../demo/v1-model_best.pt
+Epoch: 1 Step: 1 Loss: 0.683140 Instances per Sec: 1.680890
+Evaluating validation set...
+  * Epoch: 1 Step: 1 P@1  : 0.500000 Instances per Sec: 144.663466
+  * Epoch: 1 Step: 1 P@10 : 1.000000 Instances per Sec: 144.663466
+  * Epoch: 1 Step: 1 P@50 : 1.000000 Instances per Sec: 144.663466
+  * Epoch: 1 Step: 1 P@100: 1.000000 Instances per Sec: 144.663466
+  * Epoch: 1 MAP  : 0.750000 Instances per Sec: 144.663466
 ```
 When it finishes, the trained model named `v1-model_best.pt` in `demo` folder.
 
@@ -76,7 +97,49 @@ You can see the following output at the bottom of screen.
 2. 迷卡斗蟋: 0.3922
 ```
 
-Other usages of `run_server.py`  and `simple_request.py` can be found with `--help`
+Other usages of `run_server.py`  and `simple_request.py` can be found with `--help/-h`
 ```
-usage info of run_server and simple_request
+usage: run_server.py [-h] --model MODEL [--gpu GPU] [--host HOST]
+                     [--port PORT] [--version VERSION]
+
+run_server.py
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Model:
+  --model MODEL, -model MODEL
+                        Path to model .pt file(s).
+  --gpu GPU, -gpu GPU   Device to run on
+
+SERVER:
+  --host HOST, -host HOST
+                        The host url
+  --port PORT, -port PORT
+                        The port
+  --version VERSION, -version VERSION
+                        The version of model
+```
+
+```
+usage: simple_request.py [-h] --audio_path AUDIO_PATH
+                         [--rest_api_url REST_API_URL] [--top_num TOP_NUM]
+                         [--version VERSION]
+
+simple_request.py
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Data:
+  --audio_path AUDIO_PATH, -audio_path AUDIO_PATH
+                        Path to audio file
+
+Server:
+  --rest_api_url REST_API_URL, -rest_api_url REST_API_URL
+                        Initialize the PyTorch REST API endpoint URL
+  --top_num TOP_NUM, -top_num TOP_NUM
+                        Return top predictions
+  --version VERSION, -version VERSION
+                        The version of model
 ```

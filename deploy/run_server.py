@@ -48,14 +48,18 @@ def load_model(opt):
     model.to(device)
     model.eval()
 
-@app.route("/predict", methods=["POST"])
-def predict():
+@app.route("/predict/<version>", methods=["POST"])
+def predict(version):
     # Initialize the data dictionary that will be returned from the view.
     data = {"success": False}
 
     # Ensure an image was properly uploaded to our endpoint.
     if flask.request.method == 'POST':
         if flask.request.files.get("mat") and flask.request.files.get("top_num"):
+            if version != opt.version:
+                print("Version of model (%s) not found !" % version)
+                data['help'] = "Version of model (%s) not found !" % version
+                return flask.jsonify(data)
             mat = flask.request.files["mat"].read()
             mat = np.frombuffer(mat, np.float32)
             mat = torch.Tensor(mat)
@@ -89,13 +93,15 @@ def _get_parser():
     group = parser.add_argument_group('Model')
     group.add('--model', '-model', required=True,
                 help="Path to model .pt file(s). ")
+    group.add('--gpu', '-gpu', type=int, default=-1,
+              help="Device to run on")
+    group = parser.add_argument_group('SERVER')
     group.add('--host', '-host', type=str, default="127.0.0.1",
                 help="The host url")
     group.add('--port', '-port', type=int, default=5000,
                 help="The port")
-
-    group.add('--gpu', '-gpu', type=int, default=-1,
-              help="Device to run on")
+    group.add('--version', '-version', type=str, default="v0",
+                help="The version of model")
     return parser
 
 if __name__ == "__main__":

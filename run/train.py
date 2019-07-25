@@ -256,7 +256,7 @@ def main(opt, device_id):
         for j, batch in enumerate(train_iter):
             loss = train_step(model, batch, criterion, optim, device)
             num_instance += len(batch)
-            if j > 0 and  j % 10 == 0:
+            if j > 0 and  j % 1 == 0:
                 elapsed = time.time() - start
                 print("Epoch: %d Step: %d Loss: %f Instances per Sec: %f" % (i, j, loss.item(), num_instance / elapsed))
                 start = time.time()
