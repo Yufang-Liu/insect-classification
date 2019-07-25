@@ -49,7 +49,7 @@ To train a model,
 ```bash
 ./train demo v1
 ```
-where arguments `demo` is the workspace above and `v1` is the prefix of the output model (e.g., versions)
+where argument `demo` is the workspace above and `v1` is the prefix of the output model (e.g., version numbers)
 If it sucesses, we will see the following information and the training process is started.
 ```
 Building adam optimizer...
@@ -75,7 +75,7 @@ Evaluating validation set...
   * Epoch: 1 Step: 1 P@100: 1.000000 Instances per Sec: 144.663466
   * Epoch: 1 MAP  : 0.750000 Instances per Sec: 144.663466
 ```
-When it finishes, the trained model named `v1-model_best.pt` in `demo`.
+When it finishes, a model file `v1-model_best.pt` will be generated in `demo`.
 
 # Deployment
 
